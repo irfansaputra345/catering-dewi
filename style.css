@@ -60,13 +60,19 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--header-bg);
+    background: rgba(46, 125, 50, 0.5);
+    /* 90% Transparent Green */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     color: var(--header-text);
     padding: 12px 20px;
-    position: sticky;
+    position: fixed;
+    /* Fixed to overlap content */
+    width: 100%;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
 }
 
 .logo {
@@ -137,9 +143,12 @@ body {
 /* HERO */
 .hero {
     text-align: center;
-    padding: 50px 20px;
+    padding: 150px 20px 80px;
+    /* Increased top padding for fixed header */
     background: var(--hero-bg);
     color: var(--text-color);
+    margin-top: 0;
+    /* Reset margin just in case */
 }
 
 /* MENU */
@@ -168,6 +177,13 @@ body {
     padding: 15px;
 }
 
+.card .desc {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
 .content button {
     margin-top: 10px;
     width: 100%;
@@ -186,20 +202,67 @@ body {
     top: 0;
     width: 320px;
     height: 100%;
-    height: 100%;
     background: var(--card-bg);
     padding: 20px;
     transition: 0.3s;
     z-index: 1200;
     color: var(--text-color);
+    display: flex;
+    flex-direction: column;
 }
 
 .cart.active {
     right: 0;
 }
 
+.cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 15px;
+}
+
+.close-cart-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-color);
+    padding: 5px;
+}
+
 .cart ul {
     list-style: none;
+}
+
+.cart li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.delete-item-btn {
+    background: #e53935;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+}
+
+.delete-item-btn:hover {
+    background: #b71c1c;
 }
 
 .order-btn {
@@ -274,7 +337,8 @@ body {
 .page-header {
     background: #e8f5e9;
     text-align: center;
-    padding: 40px 20px;
+    padding: 120px 20px 40px;
+    /* Increased top padding for fixed header */
     color: #1b5e20;
 }
 
@@ -509,4 +573,71 @@ i.bx {
         display: none;
         /* Hide on mobile to save space, or move it */
     }
+}
+
+/* MODAL POPUP */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    z-index: 1300;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.modal-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content {
+    background: var(--card-bg);
+    color: var(--text-color);
+    width: 90%;
+    max-width: 500px;
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+    transform: translateY(20px);
+    transition: transform 0.3s;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-overlay.active .modal-content {
+    transform: translateY(0);
+}
+
+.modal-img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.modal-close:hover {
+    background: rgba(0, 0, 0, 0.8);
 }

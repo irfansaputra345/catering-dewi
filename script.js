@@ -8,10 +8,10 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const menuData = [
-        { id: 1, name: "Nasi Box Ayam Bakar", price: 25000, img: "https://loremflickr.com/400/300/chicken,food", rating: 4.8 },
-        { id: 2, name: "Snack Box Premium", price: 15000, img: "https://loremflickr.com/400/300/snack,cake", rating: 4.5 },
-        { id: 3, name: "Tumpeng Mini", price: 300000, img: "https://loremflickr.com/400/300/tumpeng,indonesianfood", rating: 5.0 },
-        { id: 4, name: "Catering Harian", price: 35000, img: "https://loremflickr.com/400/300/lunchbox,meal", rating: 4.7 }
+        { id: 1, name: "Nasi Box Ayam Bakar", price: 25000, img: "https://loremflickr.com/400/300/chicken,food", rating: 4.8, desc: "Nasi putih pulen, ayam bakar bumbu rujak, lalapan segar, dan sambal terasi." },
+        { id: 2, name: "Snack Box Premium", price: 15000, img: "https://loremflickr.com/400/300/snack,cake", rating: 4.5, desc: "Isi 3 kue basah (lemper, risoles, sus), air mineral, dan tisu." },
+        { id: 3, name: "Tumpeng Mini", price: 300000, img: "https://loremflickr.com/400/300/tumpeng,indonesianfood", rating: 5.0, desc: "Tumpeng nasi kuning untuk 5-8 orang dengan 7 macam lauk pauk komplit." },
+        { id: 4, name: "Catering Harian", price: 35000, img: "https://loremflickr.com/400/300/lunchbox,meal", rating: 4.7, desc: "Menu makan siang berganti setiap hari, termasuk nasi, lauk utama, sayur, dan buah." }
     ];
 
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <img src="${item.img}">
                     <div class="content">
                         <h3>${item.name}</h3>
+                        <p class="desc">${item.desc}</p>
                         <p class="rating">⭐ ${item.rating} / 5.0</p>
                         <p>Rp ${item.price.toLocaleString()}</p>
                         <button data-id="${item.id}">Tambah</button>
@@ -61,12 +62,22 @@ document.addEventListener("DOMContentLoaded", () => {
         cart.forEach(item => {
             total += item.price * item.qty;
             count += item.qty;
-            cartItems.innerHTML += `<li>${item.name} (${item.qty})</li>`;
+            cartItems.innerHTML += `
+            <li>
+                <span>${item.name} (${item.qty})</span>
+                <button class="delete-item-btn" onclick="removeFromCart(${item.id})"><i class='bx bx-trash'></i></button>
+            </li>`;
         });
 
         totalPrice.textContent = total.toLocaleString();
         cartCount.textContent = count;
     }
+
+    window.removeFromCart = (id) => {
+        cart = cart.filter(item => item.id !== id);
+        save();
+        updateCart();
+    };
 
     function save() {
         localStorage.setItem("cart", JSON.stringify(cart));
@@ -146,4 +157,63 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("theme", isDark ? "dark" : "light");
         });
     }
+    /* MODAL LOGIC */
+    const modalMarkup = `
+    <div class="modal-overlay" id="menuModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()"><i class='bx bx-x'></i></button>
+            <img src="" alt="" class="modal-img" id="modalImg">
+            <div class="modal-body">
+                <h3 id="modalTitle"></h3>
+                <p class="rating" id="modalRating"></p>
+                <p id="modalDesc" style="margin: 15px 0; line-height: 1.6; color: #555;"></p>
+                <h4 id="modalPrice" style="color: var(--primary); margin-bottom: 20px;"></h4>
+                <button id="modalAddBtn" style="width: 100%; border: none; background: var(--primary); color: white; padding: 12px; border-radius: 8px; cursor: pointer;">Tambah ke Keranjang</button>
+            </div>
+        </div>
+    </div>`;
+    document.body.insertAdjacentHTML('beforeend', modalMarkup);
+
+    const modal = document.getElementById("menuModal");
+    const modalImg = document.getElementById("modalImg");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalRating = document.getElementById("modalRating");
+    const modalDesc = document.getElementById("modalDesc");
+    const modalPrice = document.getElementById("modalPrice");
+    const modalAddBtn = document.getElementById("modalAddBtn");
+
+    if (menuList) {
+        menuList.addEventListener("click", e => {
+            // Check if clicked element is NOT a button (Add to Cart)
+            if (e.target.tagName !== "BUTTON" && e.target.closest(".card")) {
+                const card = e.target.closest(".card");
+                const title = card.querySelector("h3").innerText;
+                const item = menuData.find(m => m.name === title);
+                if (item) openModal(item);
+            }
+        });
+    }
+
+    function openModal(item) {
+        modalImg.src = item.img;
+        modalTitle.innerText = item.name;
+        modalRating.innerHTML = `⭐ ${item.rating} / 5.0`;
+        modalDesc.innerText = item.desc;
+        modalPrice.innerText = `Rp ${item.price.toLocaleString()}`;
+
+        modalAddBtn.onclick = () => {
+            addToCart(item.id);
+            closeModal();
+        };
+
+        modal.classList.add("active");
+    }
+
+    window.closeModal = () => {
+        modal.classList.remove("active");
+    };
+
+    modal.addEventListener("click", e => {
+        if (e.target === modal) closeModal();
+    });
 });

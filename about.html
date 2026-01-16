@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tentang Kami - Catering Dewi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <button class="menu-toggle" id="menuToggle"><i class='bx bx-menu'></i></button>
+        <h1 class="logo"><a href="index.html" style="color:white; text-decoration:none;">Catering Dewi Irfan</a></h1>
+        <div class="header-right">
+            <div class="opening-hours"><i class='bx bx-time'></i> 09:00 - 20:00</div>
+            <button class="theme-toggle" id="themeToggle" title="Ganti Tema">🌙</button>
+            <button class="cart-btn" onclick="toggleCart()"><i class='bx bx-cart'></i> <span
+                    id="cartCount">0</span></button>
+        </div>
+    </header>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <button class="close-btn" id="closeSidebar"><i class='bx bx-x'></i></button>
+        <ul>
+            <li><a href="index.html"><i class='bx bx-home'></i> Home</a></li>
+            <li><a href="menu.html"><i class='bx bxs-food-menu'></i> Menu</a></li>
+            <li><a href="about.html"><i class='bx bx-info-circle'></i> Tentang</a></li>
+            <li><a href="contact.html"><i class='bx bx-phone'></i> Kontak</a></li>
+            <li><a href="#" onclick="toggleCart()"><i class='bx bx-cart'></i> Keranjang</a></li>
+        </ul>
+    </aside>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- PAGE HEADER -->
+    <section class="page-header">
+        <h2>Tentang Kami</h2>
+        <p>Mengenal lebih dekat Catering Dewi </p>
+    </section>
+
+    <!-- ABOUT CONTENT -->
+    <section class="content-section">
+        <div class="about-container">
+            <div class="about-text">
+                <h3>Cerita Kami</h3>
+                <p>Berdiri sejak tahun 2010, Catering Dewi Irfan bermula dari usaha rumahan kecil yang berkomitmen
+                    menyediakan masakan rumahan yang lezat dan higienis. Dengan resep turun-temurun dan bahan-bahan
+                    pilihan, kami kini melayani ratusan pesanan setiap bulannya untuk berbagai acara.</p>
+
+                <h3>Visi & Misi</h3>
+                <p><strong>Visi:</strong> Menjadi penyedia layanan catering terpercaya yang menghadirkan kebahagiaan di
+                    setiap suapan.</p>
+                <p><strong>Misi:</strong></p>
+                <ul>
+                    <li>Mengutamakan kualitas dan kebersihan makanan.</li>
+                    <li>Memberikan pelayanan yang ramah dan tepat waktu.</li>
+                    <li>Menyediakan harga yang terjangkau untuk semua kalangan.</li>
+                </ul>
+            </div>
+            <div class="about-image">
+                <img src="https://picsum.photos/500/400?about" alt="Tentang Catering Dewi"
+                    class="img-responsive rounded">
+            </div>
+        </div>
+    </section>
+
+    <!-- CART -->
+    <div class="cart" id="cart">
+        <h3>Keranjang Pesanan</h3>
+        <ul id="cartItems"></ul>
+        <p class="total">Total: Rp <span id="totalPrice">0</span></p>
+        <button class="order-btn" onclick="orderNow()">Pesan Sekarang</button>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>© 2026 Catering Dewi Irfan</p>
+        <p>Nasi Box • Snack Box • Catering Harian</p>
+        <p>📞 WhatsApp: 6285927326555</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

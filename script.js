@@ -26,34 +26,68 @@ document.addEventListener("DOMContentLoaded", () => {
     if (menuList) {
         menuData.forEach(item => {
             menuList.innerHTML += `
-                <div class="card">
+                <div class="card" id="card-${item.id}">
                     <img src="${item.img}">
                     <div class="content">
                         <h3>${item.name}</h3>
                         <p class="desc">${item.desc}</p>
                         <p class="rating">⭐ ${item.rating} / 5.0</p>
                         <p>Rp ${item.price.toLocaleString()}</p>
-                        <button data-id="${item.id}">Tambah</button>
+                        <div class="card-actions" id="actions-${item.id}">
+                            <button class="add-to-cart-btn" data-id="${item.id}" onclick="addToCart(${item.id})">
+                                <i class='bx bx-cart-add'></i> Tambah
+                            </button>
+                            <div class="card-qty-controls" style="display: none;">
+                                <button class="card-ctrl-btn minus" onclick="updateQty(${item.id}, -1)">-</button>
+                                <span class="card-qty-val">0</span>
+                                <button class="card-ctrl-btn plus" onclick="updateQty(${item.id}, 1)">+</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
         });
+    }
 
-        menuList.addEventListener("click", e => {
-            if (e.target.tagName === "BUTTON") {
-                addToCart(Number(e.target.dataset.id));
+    // Helper to update card badges based on cart state
+    function updateCardControls() {
+        menuData.forEach(item => {
+            const actions = document.getElementById(`actions-${item.id}`);
+            if (actions) {
+                const addBtn = actions.querySelector('.add-to-cart-btn');
+                const controls = actions.querySelector('.card-qty-controls');
+                const qtyVal = actions.querySelector('.card-qty-val');
+
+                const cartItem = cart.find(c => c.id === item.id);
+
+                if (cartItem && cartItem.qty > 0) {
+                    addBtn.style.display = 'none';
+                    controls.style.display = 'flex';
+                    qtyVal.innerText = cartItem.qty;
+                } else {
+                    addBtn.style.display = 'block';
+                    controls.style.display = 'none';
+                    qtyVal.innerText = '0';
+                }
             }
         });
     }
 
-    function addToCart(id) {
+    window.addToCart = (id) => {
         const item = menuData.find(m => m.id === id);
         const exist = cart.find(c => c.id === id);
         exist ? exist.qty++ : cart.push({ ...item, qty: 1 });
         save();
         updateCart();
-        Swal.fire("Ditambahkan", item.name, "success");
-    }
+        updateCardControls();
+        Swal.fire({
+            title: "Ditambahkan",
+            text: `${item.name}`,
+            icon: "success",
+            timer: 800,
+            showConfirmButton: false
+        });
+    };
 
     function updateCart() {
         cartItems.innerHTML = "";
@@ -64,7 +98,15 @@ document.addEventListener("DOMContentLoaded", () => {
             count += item.qty;
             cartItems.innerHTML += `
             <li>
-                <span>${item.name} (${item.qty})</span>
+                <div class="item-info">
+                    <span class="item-name">${item.name}</span>
+                    <span class="item-price">@ Rp ${item.price.toLocaleString()}</span>
+                </div>
+                <div class="qty-controls">
+                    <button class="qty-btn" onclick="updateQty(${item.id}, -1)">-</button>
+                    <span class="qty-val">${item.qty}</span>
+                    <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
+                </div>
                 <button class="delete-item-btn" onclick="removeFromCart(${item.id})"><i class='bx bx-trash'></i></button>
             </li>`;
         });
@@ -73,10 +115,25 @@ document.addEventListener("DOMContentLoaded", () => {
         cartCount.textContent = count;
     }
 
+    window.updateQty = (id, change) => {
+        const item = cart.find(i => i.id === id);
+        if (item) {
+            item.qty += change;
+            if (item.qty < 1) {
+                removeFromCart(id); // Remove if 0
+            } else {
+                save();
+                updateCart();
+                updateCardControls();
+            }
+        }
+    };
+
     window.removeFromCart = (id) => {
         cart = cart.filter(item => item.id !== id);
         save();
         updateCart();
+        updateCardControls();
     };
 
     function save() {
@@ -131,6 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     updateCart();
+    updateCardControls(); // Sync badges on load
 
     /* DARK MODE TOGGLE */
     const toggleBtn = document.getElementById("themeToggle");
@@ -215,5 +273,150 @@ document.addEventListener("DOMContentLoaded", () => {
 
     modal.addEventListener("click", e => {
         if (e.target === modal) closeModal();
+    });
+
+    /* TESTIMONIALS MODAL LOGIC */
+    const testimonialsData = [
+        { text: "Makanannya enak banget, bumbunya meresap sampai ke tulang! Recommended buat acara kantor.", name: "Budi Santoso", rating: "⭐⭐⭐⭐⭐" },
+        { text: "Pesan tumpeng mini buat ultah anak, hiasannya cantik dan rasanya juara.", name: "Siti Aminah", rating: "⭐⭐⭐⭐⭐" },
+        { text: "Pelayanan ramah dan pengiriman selalu tepat waktu. Langganan catering harian di sini.", name: "Rina Marlina", rating: "⭐⭐⭐⭐½" }
+    ];
+
+    const testModalMarkup = `
+    <div class="modal-overlay" id="testModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <button class="modal-close" onclick="closeTestModal()"><i class='bx bx-x'></i></button>
+            <div class="modal-body" style="text-align: center;">
+                <h3 style="margin-bottom: 20px; color: var(--primary);">Apa Kata Mereka?</h3>
+                <div id="testModalContainer" style="display: flex; flex-direction: column; gap: 15px; max-height: 60vh; overflow-y: auto;">
+                    <!-- Items injected here -->
+                </div>
+            </div>
+        </div>
+    </div>`;
+    document.body.insertAdjacentHTML('beforeend', testModalMarkup);
+
+    const testModal = document.getElementById("testModal");
+    const testContainer = document.getElementById("testModalContainer");
+
+    // Function to show testimonials (for sidebar link)
+    window.openTestimonialsModal = (e) => {
+        if (e) e.preventDefault();
+
+        testContainer.innerHTML = "";
+        testimonialsData.forEach(t => {
+            testContainer.innerHTML += `
+                <div class="testimonial-card" style="background: #f9f9f9; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <p style="font-style: italic; color: #555;">"${t.text}"</p>
+                    <h5 style="margin-top: 10px; color: var(--text-color); font-weight: 600;">- ${t.name} ${t.rating}</h5>
+                </div>
+            `;
+        });
+
+        testModal.classList.add("active");
+    };
+
+    // Function to open review form (for header icon)
+    window.openReviewForm = async (e) => {
+        if (e) e.preventDefault();
+
+        const { value: formValues } = await Swal.fire({
+            title: '<div style="color: #2e7d32; font-size: 1.8rem; margin-bottom: 10px; font-weight: 700;">✍️ Tulis Ulasan Anda</div>',
+            html: `
+                <div style="text-align: left; padding: 20px; background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); border-radius: 15px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);">
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1b5e20; font-size: 0.95rem;">
+                            <i class='bx bx-user' style="margin-right: 5px; color: #2e7d32;"></i>Nama Anda
+                        </label>
+                        <input id="swal-input1" class="swal2-input" placeholder="Masukkan nama Anda" 
+                            style="margin: 0; width: 95%; border: 2px solid #66bb6a; border-radius: 10px; padding: 12px; font-size: 0.95rem; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1b5e20; font-size: 0.95rem;">
+                            <i class='bx bx-star' style="margin-right: 5px; color: #ff9800;"></i>Rating Makanan
+                        </label>
+                        <select id="swal-input2" class="swal2-input" 
+                            style="margin: 0; width: calc(100% - 4px); padding: 12px 15px; border: 2px solid #66bb6a; border-radius: 10px; font-size: 0.95rem; background: white; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); appearance: auto;">
+                            <option value="" style="color: #999;">-- Pilih Rating Anda --</option>
+                            <option value="5">⭐⭐⭐⭐⭐ Sangat Puas</option>
+                            <option value="4">⭐⭐⭐⭐ Puas</option>
+                            <option value="3">⭐⭐⭐ Cukup Puas</option>
+                            <option value="2">⭐⭐ Kurang Puas</option>
+                            <option value="1">⭐ Tidak Puas</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 10px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1b5e20; font-size: 0.95rem;">
+                            <i class='bx bx-message-square-detail' style="margin-right: 5px; color: #2e7d32;"></i>Ulasan Anda
+                        </label>
+                        <textarea id="swal-input3" class="swal2-textarea" 
+                            placeholder="Ceritakan pengalaman Anda dengan makanan kami..." 
+                            style="margin: 0; width: 95%; height: 130px; resize: vertical; border: 2px solid #66bb6a; border-radius: 10px; padding: 12px; font-size: 0.95rem; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-family: 'Poppins', sans-serif;"></textarea>
+                    </div>
+                </div>
+            `,
+            width: '650px',
+            padding: '2.5em',
+            background: '#fff',
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonText: '📤 Kirim',
+            cancelButtonText: '✕ Batal',
+            confirmButtonColor: '#2e7d32',
+            cancelButtonColor: '#999',
+            buttonsStyling: true,
+            customClass: {
+                popup: 'review-popup-custom',
+                confirmButton: 'review-confirm-btn',
+                cancelButton: 'review-cancel-btn'
+            },
+            preConfirm: () => {
+                return [
+                    document.getElementById('swal-input1').value,
+                    document.getElementById('swal-input2').value,
+                    document.getElementById('swal-input3').value
+                ]
+            }
+        });
+
+        if (formValues) {
+            const [name, rating, review] = formValues;
+            if (!name || !rating || !review) {
+                return Swal.fire({
+                    title: "⚠️ Data Belum Lengkap",
+                    html: '<p style="font-size: 1rem; color: #666;">Harap isi semua kolom (Nama, Rating, dan Ulasan)</p>',
+                    icon: "warning",
+                    confirmButtonColor: '#2e7d32',
+                    confirmButtonText: 'OK, Mengerti'
+                });
+            }
+
+            // Add to testimonials array
+            const stars = "⭐".repeat(rating);
+            testimonialsData.push({
+                text: review,
+                name: name,
+                rating: stars
+            });
+
+            Swal.fire({
+                title: "🙏 Terima Kasih!",
+                html: `<p style="font-size: 1.1rem; color: #555; line-height: 1.6;">Ulasan Anda telah berhasil dikirim!<br>Terima kasih atas feedback Anda 💚</p>`,
+                icon: "success",
+                timer: 2500,
+                showConfirmButton: false,
+                timerProgressBar: true
+            });
+        }
+    };
+
+    window.closeTestModal = () => {
+        testModal.classList.remove("active");
+    };
+
+    testModal.addEventListener("click", e => {
+        if (e.target === testModal) closeTestModal();
     });
 });

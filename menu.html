@@ -23,8 +23,10 @@
         <div class="header-right">
             <div class="opening-hours"><i class='bx bx-time'></i> 09:00 - 20:00</div>
             <button class="theme-toggle" id="themeToggle" title="Ganti Tema">🌙</button>
-            <button class="cart-btn" onclick="toggleCart()"><i class='bx bx-cart'></i> <span
-                    id="cartCount">0</span></button>
+            <button class="review-btn" onclick="openReviewForm()" title="Ulasan Pembeli">
+                <i class='bx bx-message-detail'></i>
+                <span class="review-text">Ulasan</span>
+            </button>
         </div>
     </header>
 
@@ -34,8 +36,8 @@
         <ul>
             <li><a href="index.html"><i class='bx bx-home'></i> Home</a></li>
             <li><a href="menu.html"><i class='bx bxs-food-menu'></i> Menu</a></li>
-            <li><a href="about.html"><i class='bx bx-info-circle'></i> Tentang</a></li>
-            <li><a href="contact.html"><i class='bx bx-phone'></i> Kontak</a></li>
+            <li><a href="#" onclick="openTestimonialsModal()"><i class='bx bx-star'></i> Testimoni</a></li>
+            <li><a href="contact.html"><i class='bx bx-edit'></i> Catatan Pembeli</a></li>
             <li><a href="#" onclick="toggleCart()"><i class='bx bx-cart'></i> Keranjang</a></li>
         </ul>
     </aside>
@@ -70,6 +72,12 @@
         <p>Nasi Box • Snack Box • Catering Harian</p>
         <p>📞 WhatsApp: 6285927326555</p>
     </footer>
+
+    <!-- FLOATING CART -->
+    <button class="floating-cart-btn" onclick="toggleCart()">
+        <i class='bx bx-cart'></i>
+        <span id="cartCount">0</span>
+    </button>
 
     <script src="script.js"></script>
 </body>

@@ -98,28 +98,32 @@ const cartCount = document.getElementById("cartCount");
 
 /* RENDER MENU */
 if (menuList) {
+    console.log("Rendering menu cards...");
+    menuList.innerHTML = ""; // Clear existing content
     menuData.forEach((item) => {
         menuList.innerHTML += `
                 <div class="card" id="card-${item.id}">
                     <div class="card-img-wrapper">
                         <img src="${item.img}">
-                        <button class="quick-add-cart-icon" onclick="window.addToCart(${item.id}); event.stopPropagation();" title="Tambah ke Keranjang">
+                        <button class="quick-add-cart-icon" onclick="window.addToCart(${item.id}); event.stopPropagation();" data-tooltip="Tambah ke Keranjang">
                             <i class='bx bx-cart-add'></i>
                         </button>
                     </div>
                     <div class="content">
                         <h3>${item.name}</h3>
+                        <div class="card-info-badges">
+                            <span class="card-rating-badge">⭐ ${item.rating} / 5.0</span>
+                            <span class="card-price-badge">Rp ${item.price.toLocaleString()}</span>
+                        </div>
                         <p class="desc">${item.desc}</p>
-                        <p class="rating">⭐ ${item.rating} / 5.0</p>
-                        <p>Rp ${item.price.toLocaleString()}</p>
                         <div class="card-actions" id="actions-${item.id}">
                             <button class="add-to-cart-btn" data-id="${item.id}" onclick="window.addToCart(${item.id})">
                                 <i class='bx bx-cart-add'></i> Tambah
                             </button>
                             <div class="card-qty-controls" style="display: none;">
-                                <button class="card-ctrl-btn minus" onclick="window.updateQty(${item.id}, -1)">-</button>
+                                <button class="card-ctrl-btn minus" onclick="window.updateQty(${item.id}, -1)" data-tooltip="Kurangi">-</button>
                                 <span class="card-qty-val">0</span>
-                                <button class="card-ctrl-btn plus" onclick="window.updateQty(${item.id}, 1)">+</button>
+                                <button class="card-ctrl-btn plus" onclick="window.updateQty(${item.id}, 1)" data-tooltip="Tambah">+</button>
                             </div>
                         </div>
                     </div>
@@ -152,20 +156,34 @@ function updateCardControls() {
     });
 }
 
-window.addToCart = (id) => {
+window.addToCart = async (id) => {
     const item = menuData.find((m) => m.id === id);
+
+    const { value: note } = await Swal.fire({
+        title: `Tambah ${item.name}`,
+        input: "text",
+        inputLabel: "Catatan/Request (Opsional)",
+        inputPlaceholder: "Contoh: Pedas, Tanpa bawang, dll...",
+        showCancelButton: true,
+        confirmButtonText: "Tambah",
+        confirmButtonColor: "#2e7d32",
+        cancelButtonText: "Batal",
+    });
+
+    if (note === undefined) return;
+
     const exist = cart.find((c) => c.id === id);
-    exist ? exist.qty++ : cart.push({ ...item, qty: 1 });
+    if (exist) {
+        exist.qty++;
+        if (note) {
+            exist.note = exist.note ? `${exist.note}, ${note}` : note;
+        }
+    } else {
+        cart.push({ ...item, qty: 1, note: note || "" });
+    }
     save();
     updateCart();
     updateCardControls();
-    Swal.fire({
-        title: "Ditambahkan",
-        text: `${item.name}`,
-        icon: "success",
-        timer: 800,
-        showConfirmButton: false,
-    });
 };
 
 function updateCart() {
@@ -180,14 +198,15 @@ function updateCart() {
             <li>
                 <div class="item-info">
                     <span class="item-name">${item.name}</span>
+                    ${item.note ? `<br><small style="color: #666; font-style: italic;">Catatan: ${item.note}</small>` : ""}
                     <span class="item-price">@ Rp ${item.price.toLocaleString()}</span>
                 </div>
                 <div class="qty-controls">
-                    <button class="qty-btn" onclick="window.updateQty(${item.id}, -1)">-</button>
+                    <button class="qty-btn" onclick="window.updateQty(${item.id}, -1)" data-tooltip="Kurangi Jumlah">-</button>
                     <span class="qty-val">${item.qty}</span>
-                    <button class="qty-btn" onclick="window.updateQty(${item.id}, 1)">+</button>
+                    <button class="qty-btn" onclick="window.updateQty(${item.id}, 1)" data-tooltip="Tambah Jumlah">+</button>
                 </div>
-                <button class="delete-item-btn" onclick="window.removeFromCart(${item.id})"><i class='bx bx-trash'></i></button>
+                <button class="delete-item-btn" onclick="window.removeFromCart(${item.id})" data-tooltip="Hapus Item"><i class='bx bx-trash'></i></button>
             </li>`;
     });
 
@@ -246,7 +265,10 @@ window.orderNow = () => {
     }
 
     let msg = "*PESANAN SONLOKITCHEN*\n\n";
-    cart.forEach((i, n) => (msg += `${n + 1}. ${i.name} (${i.qty}x)\n`));
+    cart.forEach((i, n) => {
+        msg += `${n + 1}. ${i.name} (${i.qty}x)\n`;
+        if (i.note) msg += `   *Catatan:* ${i.note}\n`;
+    });
     msg += `\nTotal: Rp ${total.toLocaleString()}`;
 
     window.open(
@@ -333,9 +355,9 @@ const modalMarkup = `
             <div class="modal-body">
                 <h3 id="modalTitle"></h3>
                 <p class="rating" id="modalRating"></p>
-                <p id="modalDesc" style="margin: 15px 0; line-height: 1.6; color: #555;"></p>
+                <p id="modalDesc"></p>
                 <h4 id="modalPrice" style="color: var(--primary); margin-bottom: 20px;"></h4>
-                <button id="modalAddBtn" style="width: 100%; border: none; background: var(--primary); color: white; padding: 12px; border-radius: 8px; cursor: pointer;">Tambah ke Keranjang</button>
+                <button id="modalAddBtn">Tambah ke Keranjang</button>
             </div>
         </div>
     </div>`;
@@ -422,8 +444,8 @@ const testModalMarkup = `
     <div class="modal-overlay" id="testModal">
         <div class="modal-content" style="max-width: 600px;">
             <button class="modal-close" onclick="closeTestModal()"><i class='bx bx-x'></i></button>
-            <div class="modal-body" style="text-align: center;">
-                <h3 style="margin-bottom: 20px; color: var(--primary);">Apa Kata Mereka?</h3>
+            <div class="modal-body" style="text-align: center; background: var(--bg-color);">
+                <h3 style="margin-bottom: 20px;">Apa Kata Mereka?</h3>
                 <div id="testModalContainer" style="display: flex; flex-direction: column; gap: 15px; max-height: 60vh; overflow-y: auto;">
                     <!-- Items injected here -->
                 </div>
@@ -448,7 +470,7 @@ window.openTestimonialsModal = (e) => {
             : "";
 
         testContainer.innerHTML += `
-                <div class="testimonial-card" style="background: white; padding: 18px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-align: left; border: 1px solid #eee;">
+                <div class="testimonial-card" style="padding: 18px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-align: left; margin-bottom: 10px;">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
                         <span style="color: #ff9800; font-weight: bold; font-size: 1.1rem;">${t.rating}</span>
                         <small style="color: #999;">${t.timestamp ? new Date(t.timestamp).toLocaleDateString() : ""}</small>
@@ -528,26 +550,22 @@ window.openReviewForm = async (e) => {
             cancelButton: "review-cancel-btn",
         },
         preConfirm: () => {
-            return {
-                name: document.getElementById("swal-input1").value,
-                rating: document.getElementById("swal-input2").value,
-                review: document.getElementById("swal-input3").value,
-                file: document.getElementById("swal-input-file").files[0],
-            };
+            const name = document.getElementById("swal-input1").value;
+            const rating = document.getElementById("swal-input2").value;
+            const review = document.getElementById("swal-input3").value;
+            const file = document.getElementById("swal-input-file").files[0];
+
+            if (!name || !rating || !review) {
+                Swal.showValidationMessage(`Harap isi Nama, Rating, dan Ulasan!`);
+                return false;
+            }
+
+            return { name, rating, review, file };
         },
     });
 
     if (formValues) {
         const { name, rating, review, file } = formValues;
-        if (!name || !rating || !review) {
-            return Swal.fire({
-                title: "⚠️ Data Belum Lengkap",
-                html: '<p style="font-size: 1rem; color: #666;">Harap isi semua kolom (Nama, Rating, dan Ulasan)</p>',
-                icon: "warning",
-                confirmButtonColor: "#2e7d32",
-                confirmButtonText: "OK, Mengerti",
-            });
-        }
 
         // Push to Firebase
         Swal.fire({

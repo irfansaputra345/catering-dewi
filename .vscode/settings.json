@@ -2,5 +2,5 @@
     "files.exclude": {
         "": true
     },
-    "liveServer.settings.port": 5501
+    "liveServer.settings.port": 5503
 }

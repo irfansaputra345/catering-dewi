@@ -19,14 +19,20 @@
 
     <!-- HEADER -->
     <header class="header">
-        <button class="menu-toggle" id="menuToggle"><i class='bx bx-menu'></i></button>
+        <button class="menu-toggle" id="menuToggle" data-tooltip="Menu Navigasi">
+            <i class="bx bx-menu"></i>
+        </button>
         <h1 class="logo"><a href="index.html"><img src="images/logo-sonlokitchen.webp" alt="Logo"
                     class="logo-img"><span>SonloKitchen</span></a></h1>
         <div class="header-right">
-            <div class="opening-hours"><i class='bx bx-time'></i> 09:00 - 20:00</div>
-            <button class="theme-toggle" id="themeToggle" title="Ganti Tema">🌙</button>
-            <button class="review-btn" onclick="openReviewForm()" title="Ulasan Pembeli">
-                <i class='bx bx-message-detail'></i>
+            <div class="opening-hours">
+                <i class="bx bx-time"></i> 09:00 - 20:00
+            </div>
+            <button class="theme-toggle" id="themeToggle" data-tooltip="Ganti Tema">
+                🌙
+            </button>
+            <button class="review-btn" onclick="openReviewForm()" data-tooltip="Tulis Ulasan">
+                <i class="bx bx-message-detail"></i>
                 <span class="review-text">Ulasan</span>
             </button>
         </div>
@@ -34,14 +40,24 @@
 
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
-        <button class="close-btn" id="closeSidebar"><i class='bx bx-x'></i></button>
+        <button class="close-btn" id="closeSidebar" data-tooltip="Tutup Menu"><i class='bx bx-x'></i></button>
         <ul>
             <li><a href="index.html"><i class='bx bx-home'></i> Home</a></li>
-            <li><a href="menu.html"><i class='bx bxs-food-menu'></i> Menu</a></li>
-            <li><a href="#" onclick="openTestimonialsModal()"><i class='bx bx-star'></i> Testimoni</a></li>
-            <li><a href="contact.html"><i class='bx bx-edit'></i> Catatan Pembeli</a></li>
+            <li><a href="menu.html" class="active"><i class='bx bxs-food-menu'></i> Menu</a></li>
+            <li><a href="about.html"><i class='bx bx-info-circle'></i> Tentang</a></li>
+            <li><a href="contact.html"><i class='bx bx-edit'></i> Request</a></li>
             <li><a href="#" onclick="toggleCart()"><i class='bx bx-cart'></i> Keranjang</a></li>
         </ul>
+
+        <!-- Sidebar Extra Info (Mobile Only) -->
+        <div class="sidebar-extra">
+            <div class="sidebar-info-item">
+                <i class="bx bx-time"></i> <span>09:00 - 20:00</span>
+            </div>
+            <button class="sidebar-review-btn" onclick="openReviewForm()">
+                <i class="bx bx-message-detail"></i> Tulis Ulasan
+            </button>
+        </div>
     </aside>
 
     <div class="overlay" id="overlay"></div>
@@ -61,11 +77,12 @@
     <div class="cart" id="cart">
         <div class="cart-header">
             <h3>Keranjang Pesanan</h3>
-            <button class="close-cart-btn" onclick="toggleCart()"><i class='bx bx-x'></i></button>
+            <button class="close-cart-btn" onclick="toggleCart()" data-tooltip="Tutup Keranjang"><i
+                    class='bx bx-x'></i></button>
         </div>
         <ul id="cartItems"></ul>
         <p class="total">Total: Rp <span id="totalPrice">0</span></p>
-        <button class="order-btn" onclick="orderNow()">Pesan Sekarang</button>
+        <button class="order-btn" onclick="orderNow()" data-tooltip="Pesan via WhatsApp">Pesan Sekarang</button>
     </div>
 
     <!-- FOOTER -->
@@ -76,7 +93,7 @@
     </footer>
 
     <!-- FLOATING CART -->
-    <button class="floating-cart-btn" onclick="toggleCart()">
+    <button class="floating-cart-btn" onclick="toggleCart()" data-tooltip="Buka Keranjang">
         <i class='bx bx-cart'></i>
         <span id="cartCount">0</span>
     </button>

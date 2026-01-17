@@ -25,6 +25,8 @@
     --header-text: #333333;
     /* Dark text for light mode */
     --header-shadow: rgba(0, 0, 0, 0.3);
+    --bg-alt: #f8f9fa;
+    --card-border: rgba(0, 0, 0, 0.05);
     --hero-bg: #e8f5e9;
     --footer-bg: var(--primary-dark);
     --footer-text: white;
@@ -43,6 +45,11 @@ body.dark-mode {
     --header-text: #ffffff;
     /* Light text for dark mode */
     --header-shadow: rgba(255, 255, 255, 0.3);
+    --primary: #ffffff;
+    --primary-dark: #f0f0f0;
+    --bg-alt: #0a0a0a;
+    --card-bg: #1a1a1a;
+    --card-border: rgba(255, 255, 255, 0.1);
     --footer-bg: #1a1a1a;
     --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.5);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
@@ -64,8 +71,8 @@ body {
 /* HEADER */
 .header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 10px;
     background: var(--header-bg);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
@@ -114,6 +121,7 @@ body {
     display: flex;
     align-items: center;
     gap: 15px;
+    margin-left: auto;
 }
 
 .menu-toggle,
@@ -128,6 +136,25 @@ body {
     align-items: center;
     justify-content: center;
     padding: 5px;
+    transition: background 0.3s;
+    border-radius: 5px;
+}
+
+.menu-toggle {
+    order: -1;
+    /* Always first in the flex container */
+}
+
+.menu-toggle:hover,
+.cart-btn:hover,
+.theme-toggle:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+body.dark-mode .menu-toggle:hover,
+body.dark-mode .cart-btn:hover,
+body.dark-mode .theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .review-btn {
@@ -140,7 +167,7 @@ body {
     align-items: center;
     gap: 6px;
     padding: 6px 12px;
-    font-size: 0.9rem;
+    font-size: 0.72rem;
     transition: all 0.3s ease;
 }
 
@@ -156,9 +183,52 @@ body {
 
 .review-text {
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.68rem;
     white-space: nowrap;
-    /* Prevent wrapping */
+}
+
+.sidebar a.active {
+    color: #4dabf7 !important;
+    /* Biru terang agar kontras di Dark/Light Mode */
+    font-weight: 700;
+}
+
+/* Tooltip System */
+[data-tooltip] {
+    position: relative;
+    cursor: pointer;
+}
+
+[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: -31px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 2000;
+    pointer-events: none;
+}
+
+[data-tooltip]:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Hide tooltips on mobile */
+@media (max-width: 768px) {
+    [data-tooltip]::after {
+        display: none;
+    }
 }
 
 /* Hide review text on mobile */
@@ -210,6 +280,52 @@ body {
     text-decoration: none;
     color: #333;
     font-size: 1rem;
+}
+
+/* Sidebar Extra Info */
+.sidebar-extra {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    display: none;
+    /* Hidden on Desktop */
+}
+
+body.dark-mode .sidebar-extra {
+    border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-info-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+body.dark-mode .sidebar-info-item {
+    color: #aaa;
+}
+
+.sidebar-review-btn {
+    width: 100%;
+    padding: 10px;
+    background: #2e7d32;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.sidebar-review-btn:hover {
+    background: #1b5e20;
 }
 
 .close-btn {
@@ -287,7 +403,7 @@ body {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: rgba(255, 152, 0, 0.95);
+    background: #2e7d32;
     color: white;
     border: none;
     border-radius: 50%;
@@ -311,9 +427,9 @@ body {
 }
 
 .quick-add-cart-icon:hover {
-    background: rgba(251, 140, 0, 1);
+    background: #1b5e20;
     transform: scale(1.15);
-    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.5);
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.5);
 }
 
 .quick-add-cart-icon:active {
@@ -343,6 +459,48 @@ body {
     flex: 1;
     /* Pushes button down */
 }
+
+.card-info-badges {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.card-rating-badge {
+    background: rgba(251, 192, 45, 0.15) !important;
+    color: #f57f17 !important;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 700 !important;
+    display: inline-flex !important;
+    align-items: center;
+    border: 1px solid rgba(251, 192, 45, 0.3);
+}
+
+.card-price-badge {
+    background: rgba(46, 125, 50, 0.15) !important;
+    color: #1b5e20 !important;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 800 !important;
+    display: inline-flex !important;
+    border: 1px solid rgba(46, 125, 50, 0.3);
+}
+
+body.dark-mode .card-rating-badge {
+    color: #fbc02d !important;
+    background: rgba(251, 192, 45, 0.2) !important;
+}
+
+body.dark-mode .card-price-badge {
+    color: #4caf50 !important;
+    background: rgba(76, 175, 80, 0.2) !important;
+}
+
+
 
 /* Card Controls */
 .card-actions {
@@ -583,27 +741,27 @@ body {
     margin-top: 40px;
 }
 
-/* RESPONSIVE */
-@media (min-width: 768px) {
+/* RESPONSIVE DESIGN - BREAKPOINTS */
+
+/* 1. Desktop & Large Screens (> 1280px) */
+@media (min-width: 1281px) {
     .menu-toggle {
         display: none;
     }
 
     .sidebar {
         position: fixed;
-        /* Fix: Overlay on header */
         top: 0;
         left: 50%;
         transform: translateX(-50%);
         width: auto;
-        height: 60px;
-        /* Match header height approx */
+        height: 70px;
         background: transparent;
         padding: 0;
         display: flex;
         align-items: center;
         z-index: 1001;
-        /* Ensure above header but below cart if needed? Cart is 1000 inside header. */
+        box-shadow: none;
     }
 
     .sidebar ul {
@@ -611,27 +769,151 @@ body {
         gap: 20px;
         margin: 0;
         list-style: none;
-        /* Safekeeping */
     }
 
     .sidebar a {
         color: var(--header-text);
-        /* Use variable */
-        font-weight: 500;
-        padding: 5px 10px;
-        border-radius: 5px;
-        transition: 0.3s;
+        font-weight: 600;
+        font-size: 0.8rem;
+        padding: 8px 15px;
+        border-radius: 20px;
+        transition: background 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 
     .sidebar a:hover {
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(0, 0, 0, 0.05);
+    }
+
+    body.dark-mode .sidebar a:hover {
+        background: rgba(255, 255, 255, 0.1);
     }
 
     .close-btn,
     .overlay {
         display: none;
     }
+
+    .logo {
+        font-size: 1.3rem;
+    }
+
+    .logo span {
+        display: block;
+    }
+
+    .sidebar-extra {
+        display: none;
+    }
 }
+
+/* 2. Tablets, Laptops & Mobile (< 1280px) */
+@media (max-width: 1280px) {
+    .header {
+        padding: 10px 15px;
+    }
+
+    .logo {
+        font-size: 1.15rem;
+    }
+
+    .logo span {
+        display: block;
+    }
+
+    .header-right {
+        gap: 12px;
+    }
+
+    .menu-toggle {
+        display: flex;
+    }
+
+    .opening-hours,
+    .review-btn {
+        display: none;
+        /* Move to sidebar */
+    }
+
+    .sidebar-extra {
+        display: block;
+    }
+
+    /* Side Drawer for these screens */
+    .sidebar {
+        left: -260px;
+        width: 260px;
+        height: 100%;
+        background: white;
+        padding: 20px;
+        transition: 0.3s;
+        z-index: 1100;
+        position: fixed;
+        top: 0;
+        display: block;
+    }
+
+    body.dark-mode .sidebar {
+        background: #1a1a1a;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .sidebar ul {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 50px;
+        padding: 0;
+        list-style: none;
+    }
+
+    .sidebar a {
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 0;
+    }
+
+    body.dark-mode .sidebar a {
+        color: #fff;
+    }
+
+    body.dark-mode .sidebar a:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* 3. Mobile Specific Tweaks (< 768px) */
+@media (max-width: 767px) {
+    .header {
+        padding: 8px 12px;
+    }
+
+    .logo {
+        font-size: 1rem;
+    }
+
+    .logo-img {
+        height: 28px;
+    }
+
+    .logo span {
+        font-size: 0.72rem;
+    }
+
+    .header-right {
+        gap: 8px;
+    }
+}
+
 
 /* Page Header */
 .page-header {
@@ -772,6 +1054,16 @@ body {
 .testimonial-card {
     background: var(--card-bg);
     color: var(--text-color);
+    border: 1px solid var(--card-border);
+}
+
+body.dark-mode .testimonial-card h5 {
+    color: #66bb6a;
+    /* Lighter green for dark mode */
+}
+
+.modal-content {
+    border: 1px solid var(--card-border);
 }
 
 .contact-form {
@@ -848,9 +1140,86 @@ button:active {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.hero p {
-    font-size: 1.2rem;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+/* Location Section */
+.location-section {
+    padding: 60px 20px;
+    background: var(--bg-color);
+    text-align: center;
+}
+
+.location-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.location-section h3 {
+    font-size: 2rem !important;
+    margin-bottom: 30px !important;
+    color: #000000 !important;
+    /* Hitam di Light Mode */
+}
+
+body.dark-mode .location-section h3 {
+    color: #ffffff !important;
+    /* Putih di Dark Mode */
+}
+
+.map-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.map-wrapper {
+    width: 100%;
+    height: 400px;
+}
+
+.map-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.location-info {
+    padding: 30px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+body.dark-mode .location-info {
+    background: var(--card-dark);
+}
+
+.address-text {
+    font-size: 1.1rem;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.map-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #4285F4;
+    /* Google Blue */
+    color: white;
+    padding: 12px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.map-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(66, 133, 244, 0.4);
+    color: white;
 }
 
 /* Icon Styles */
@@ -860,7 +1229,7 @@ i.bx {
 }
 
 .opening-hours {
-    font-size: 0.9rem;
+    font-size: 0.72rem;
     font-weight: 600;
     color: var(--header-text);
     margin-right: 15px;
@@ -868,13 +1237,6 @@ i.bx {
     align-items: center;
     gap: 8px;
     white-space: nowrap;
-}
-
-@media (max-width: 768px) {
-    .opening-hours {
-        display: none;
-        /* Hide on mobile to save space, or move it */
-    }
 }
 
 /* MODAL POPUP */
@@ -940,11 +1302,42 @@ i.bx {
     font-size: 1.2rem;
 }
 
+#modalDesc {
+    margin: 15px 0;
+    line-height: 1.6;
+    color: #666;
+}
+
+body.dark-mode #modalDesc {
+    color: #bbb;
+}
+
+#modalAddBtn {
+    width: 100%;
+    border: none;
+    background: var(--primary);
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.3s;
+}
+
+body.dark-mode #modalAddBtn {
+    color: #000;
+}
+
+#modalAddBtn:hover {
+    opacity: 0.9;
+}
+
+
 .floating-cart-btn {
     position: fixed;
     bottom: 30px;
     right: 30px;
-    background: var(--primary);
+    background: #2e7d32;
     color: white;
     width: 60px;
     height: 60px;

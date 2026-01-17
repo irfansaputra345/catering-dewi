@@ -1,5 +1,10 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import {
+    getDatabase,
+    ref,
+    push,
+    onValue,
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 const CONFIG = {
     whatsapp: "6285927326555",
@@ -16,7 +21,7 @@ const firebaseConfig = {
     projectId: "catring-irfan",
     storageBucket: "catring-irfan.firebasestorage.app",
     messagingSenderId: "601199637263",
-    appId: "1:601199637263:web:901fefbe87be1b57f0447a"
+    appId: "1:601199637263:web:901fefbe87be1b57f0447a",
 };
 
 // Initialize Firebase
@@ -28,7 +33,7 @@ const menuData = [
         id: 1,
         name: "Nasi Box Ayam Bakar",
         price: 18000,
-        img: "images/Nasi BOx.jpeg",
+        img: "images/image 6.webp",
         rating: 4.8,
         desc: "Nasi putih pulen, ayam bakar bumbu rujak, lalapan segar, dan sambal terasi.",
     },
@@ -36,7 +41,7 @@ const menuData = [
         id: 2,
         name: "Mangut Ikan",
         price: 30000,
-        img: "images/Mangut Nila.jpeg",
+        img: "images/image 4.webp",
         rating: 4.5,
         desc: "Bisa request untuk ikanyab , ada Nila, Lele, Gurame, Dan Lain-Lain.",
     },
@@ -44,7 +49,7 @@ const menuData = [
         id: 3,
         name: "Rica-Rica",
         price: 300000,
-        img: "images/Rica-Rica.jpeg",
+        img: "images/image 8.webp",
         rating: 5.0,
         desc: "Rica - Rica bisa request daging ayam, daging entok, Harga bisa menyesuaikan dan bisa request sesuai budget.",
     },
@@ -52,7 +57,7 @@ const menuData = [
         id: 4,
         name: "Catering Harian",
         price: 35000,
-        img: "images/Nasi BOx.jpeg",
+        img: "images/image 10.webp",
         rating: 4.7,
         desc: "Menu makan siang berganti setiap hari, termasuk nasi, lauk utama, sayur, dan buah.",
     },
@@ -73,7 +78,7 @@ if (menuList) {
                 <div class="card" id="card-${item.id}">
                     <div class="card-img-wrapper">
                         <img src="${item.img}">
-                        <button class="quick-add-cart-icon" onclick="addToCart(${item.id}); event.stopPropagation();" title="Tambah ke Keranjang">
+                        <button class="quick-add-cart-icon" onclick="window.addToCart(${item.id}); event.stopPropagation();" title="Tambah ke Keranjang">
                             <i class='bx bx-cart-add'></i>
                         </button>
                     </div>
@@ -83,13 +88,13 @@ if (menuList) {
                         <p class="rating">⭐ ${item.rating} / 5.0</p>
                         <p>Rp ${item.price.toLocaleString()}</p>
                         <div class="card-actions" id="actions-${item.id}">
-                            <button class="add-to-cart-btn" data-id="${item.id}" onclick="addToCart(${item.id})">
+                            <button class="add-to-cart-btn" data-id="${item.id}" onclick="window.addToCart(${item.id})">
                                 <i class='bx bx-cart-add'></i> Tambah
                             </button>
                             <div class="card-qty-controls" style="display: none;">
-                                <button class="card-ctrl-btn minus" onclick="updateQty(${item.id}, -1)">-</button>
+                                <button class="card-ctrl-btn minus" onclick="window.updateQty(${item.id}, -1)">-</button>
                                 <span class="card-qty-val">0</span>
-                                <button class="card-ctrl-btn plus" onclick="updateQty(${item.id}, 1)">+</button>
+                                <button class="card-ctrl-btn plus" onclick="window.updateQty(${item.id}, 1)">+</button>
                             </div>
                         </div>
                     </div>
@@ -153,11 +158,11 @@ function updateCart() {
                     <span class="item-price">@ Rp ${item.price.toLocaleString()}</span>
                 </div>
                 <div class="qty-controls">
-                    <button class="qty-btn" onclick="updateQty(${item.id}, -1)">-</button>
+                    <button class="qty-btn" onclick="window.updateQty(${item.id}, -1)">-</button>
                     <span class="qty-val">${item.qty}</span>
-                    <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
+                    <button class="qty-btn" onclick="window.updateQty(${item.id}, 1)">+</button>
                 </div>
-                <button class="delete-item-btn" onclick="removeFromCart(${item.id})"><i class='bx bx-trash'></i></button>
+                <button class="delete-item-btn" onclick="window.removeFromCart(${item.id})"><i class='bx bx-trash'></i></button>
             </li>`;
     });
 
@@ -372,10 +377,7 @@ function fetchReviews() {
         const data = snapshot.val();
         if (data) {
             const firebaseReviews = Object.values(data).reverse();
-            testimonialsData = [
-                ...firebaseReviews,
-                ...staticTestimonials,
-            ];
+            testimonialsData = [...firebaseReviews, ...staticTestimonials];
         }
     });
 }

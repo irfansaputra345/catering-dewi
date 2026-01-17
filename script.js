@@ -323,21 +323,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const { value: formValues } = await Swal.fire({
             title: '<div style="color: #2e7d32; font-size: 1.8rem; margin-bottom: 10px; font-weight: 700;">✍️ Tulis Ulasan Anda</div>',
             html: `
-                <div style="text-align: left; padding: 20px; background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); border-radius: 15px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);">
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1b5e20; font-size: 0.95rem;">
-                            <i class='bx bx-user' style="margin-right: 5px; color: #2e7d32;"></i>Nama Anda
+                <div style="text-align: left; padding: 25px; background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); border-radius: 15px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);">
+                    <div style="margin-bottom: 25px;">
+                        <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #1b5e20; font-size: 1rem;">
+                            <i class='bx bx-user' style="margin-right: 8px; color: #2e7d32; font-size: 1.1rem;"></i>Nama Anda
                         </label>
                         <input id="swal-input1" class="swal2-input" placeholder="Masukkan nama Anda" 
-                            style="margin: 0; width: 95%; border: 2px solid #66bb6a; border-radius: 10px; padding: 12px; font-size: 0.95rem; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                            style="margin: 0; width: 100%; border: 2px solid #66bb6a; border-radius: 10px; padding: 14px 16px; font-size: 1rem; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); box-sizing: border-box; transition: all 0.3s ease;">
                     </div>
                     
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1b5e20; font-size: 0.95rem;">
-                            <i class='bx bx-star' style="margin-right: 5px; color: #ff9800;"></i>Rating Makanan
+                    <div style="margin-bottom: 25px;">
+                        <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #1b5e20; font-size: 1rem;">
+                            <i class='bx bx-star' style="margin-right: 8px; color: #ff9800; font-size: 1.1rem;"></i>Rating Makanan
                         </label>
                         <select id="swal-input2" class="swal2-input" 
-                            style="margin: 0; width: calc(100% - 4px); padding: 12px 15px; border: 2px solid #66bb6a; border-radius: 10px; font-size: 0.95rem; background: white; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); appearance: auto;">
+                            style="margin: 0; width: 100%; padding: 14px 16px; border: 2px solid #66bb6a; border-radius: 10px; font-size: 1rem; background: white; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); appearance: auto; box-sizing: border-box; transition: all 0.3s ease;">
                             <option value="" style="color: #999;">-- Pilih Rating Anda --</option>
                             <option value="5">⭐⭐⭐⭐⭐ Sangat Puas</option>
                             <option value="4">⭐⭐⭐⭐ Puas</option>
@@ -347,13 +347,13 @@ document.addEventListener("DOMContentLoaded", () => {
                         </select>
                     </div>
                     
-                    <div style="margin-bottom: 10px;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1b5e20; font-size: 0.95rem;">
-                            <i class='bx bx-message-square-detail' style="margin-right: 5px; color: #2e7d32;"></i>Ulasan Anda
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #1b5e20; font-size: 1rem;">
+                            <i class='bx bx-message-square-detail' style="margin-right: 8px; color: #2e7d32; font-size: 1.1rem;"></i>Ulasan Anda
                         </label>
                         <textarea id="swal-input3" class="swal2-textarea" 
                             placeholder="Ceritakan pengalaman Anda dengan makanan kami..." 
-                            style="margin: 0; width: 95%; height: 130px; resize: vertical; border: 2px solid #66bb6a; border-radius: 10px; padding: 12px; font-size: 0.95rem; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-family: 'Poppins', sans-serif;"></textarea>
+                            style="margin: 0; width: 100%; height: 160px; resize: vertical; border: 2px solid #66bb6a; border-radius: 10px; padding: 14px 16px; font-size: 1rem; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-family: 'Poppins', sans-serif; box-sizing: border-box; word-wrap: break-word; overflow-wrap: break-word; line-height: 1.6; transition: all 0.3s ease;"></textarea>
                     </div>
                 </div>
             `,
@@ -362,7 +362,7 @@ document.addEventListener("DOMContentLoaded", () => {
             background: '#fff',
             focusConfirm: false,
             showCancelButton: true,
-            confirmButtonText: '📤 Kirim',
+            confirmButtonText: '📤 Kirim Ulasan',
             cancelButtonText: '✕ Batal',
             confirmButtonColor: '#2e7d32',
             cancelButtonColor: '#999',

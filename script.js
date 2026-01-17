@@ -8,10 +8,10 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const menuData = [
-        { id: 1, name: "Nasi Box Ayam Bakar", price: 18000, img: "images/Nasi BOx.jpeg", rating: 4.8, desc: "Nasi putih pulen, ayam bakar bumbu rujak, lalapan segar, dan sambal terasi." },
-        { id: 2, name: "Mangut Ikan", price: 30000, img: "images/Mangut Nila.jpeg", rating: 4.5, desc: "Bisa request untuk ikanyab , ada Nila, Lele, Gurame, Dan Lain-Lain." },
-        { id: 3, name: "Rica-Rica", price: 300000, img: "images/Rica-Rica.jpeg", rating: 5.0, desc: "Rica - Rica bisa request daging ayam, daging entok, Harga bisa menyesuaikan dan bisa request sesuai budget." },
-        { id: 4, name: "Catering Harian", price: 35000, img: "images/Nasi BOx.jpeg", rating: 4.7, desc: "Menu makan siang berganti setiap hari, termasuk nasi, lauk utama, sayur, dan buah." }
+        { id: 1, name: "Nasi Box Ayam Bakar", price: 18000, img: "images/IMG-20260117-WA0002.webp", rating: 4.8, desc: "Nasi putih pulen, ayam bakar bumbu rujak, lalapan segar, dan sambal terasi." },
+        { id: 2, name: "Mangut Ikan", price: 30000, img: "images/IMG-20260117-WA0007.webp", rating: 4.5, desc: "Bisa request untuk ikanyab , ada Nila, Lele, Gurame, Dan Lain-Lain." },
+        { id: 3, name: "Rica-Rica", price: 300000, img: "images/IMG-20260117-WA0004.webp", rating: 5.0, desc: "Rica - Rica bisa request daging ayam, daging entok, Harga bisa menyesuaikan dan bisa request sesuai budget." },
+        { id: 4, name: "Catering Harian", price: 35000, img: "images/IMG-20260117-WA0003.webp", rating: 4.7, desc: "Menu makan siang berganti setiap hari, termasuk nasi, lauk utama, sayur, dan buah." }
     ];
 
     let cart = JSON.parse(localStorage.getItem("cart")) || [];

@@ -220,7 +220,7 @@ window.orderNow = () => {
         );
     }
 
-    let msg = "*PESANAN CATERING DEWI IRFAN*\n\n";
+    let msg = "*PESANAN SONLOKITCHEN*\n\n";
     cart.forEach((i, n) => (msg += `${n + 1}. ${i.name} (${i.qty}x)\n`));
     msg += `\nTotal: Rp ${total.toLocaleString()}`;
 

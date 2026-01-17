@@ -1,7 +1,7 @@
 :root {
     /* Color Palette - Simple Modern */
-    --primary: #2e7d32;
-    --primary-dark: #1b5e20;
+    --primary: #000000;
+    --primary-dark: #000000;
     --accent: #ff9800;
     /* Simple Orange */
     --bg-light: #ffffff;
@@ -12,7 +12,7 @@
     --card-dark: #1e1e1e;
 
     /* Solid Colors instead of Gradients */
-    --gradient-primary: #2e7d32;
+    --gradient-primary: #181818;
     /* Flat Green */
     --gradient-hero: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://loremflickr.com/1200/600/food,dinner');
 
@@ -20,8 +20,11 @@
     --bg-color: var(--bg-light);
     --text-color: var(--text-light);
     --card-bg: var(--card-light);
-    --header-bg: var(--primary);
-    --header-text: white;
+    --header-bg: rgba(255, 255, 255, 0.5);
+    /* Semi-transparent White */
+    --header-text: #333333;
+    /* Dark text for light mode */
+    --header-shadow: rgba(0, 0, 0, 0.3);
     --hero-bg: #e8f5e9;
     --footer-bg: var(--primary-dark);
     --footer-text: white;
@@ -35,8 +38,11 @@ body.dark-mode {
     --bg-color: var(--bg-dark);
     --text-color: var(--text-dark);
     --card-bg: var(--card-dark);
-    --header-bg: #0d260d;
-    /* Darker green for header in dark mode */
+    --header-bg: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent Black */
+    --header-text: #ffffff;
+    /* Light text for dark mode */
+    --header-shadow: rgba(255, 255, 255, 0.3);
     --footer-bg: #1a1a1a;
     --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.5);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
@@ -60,28 +66,48 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* Ensures vertical alignment */
-    background: rgba(46, 125, 50, 0.5);
-    /* 90% Transparent Green */
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: var(--header-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     color: var(--header-text);
     padding: 12px 20px;
     position: fixed;
-    /* Fixed to overlap content */
     width: 100%;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    text-shadow: 0 1px 2px var(--header-shadow);
+}
+
+/* Scrolled state for header */
+.header.header-scrolled {
+    background: var(--header-bg);
+    padding: 10px 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .logo {
     font-size: 1.4rem;
-    /* Slightly larger for better balance */
     display: flex;
     align-items: center;
     height: 100%;
+    font-weight: 600;
+}
+
+.logo a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--header-text) !important;
+}
+
+.logo-img {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 5px;
 }
 
 .header-right {
@@ -95,21 +121,20 @@ body {
 .theme-toggle {
     background: none;
     border: none;
-    color: white;
+    color: var(--header-text);
     font-size: 1.5rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 5px;
-    /* Increase hit area */
 }
 
 .review-btn {
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--header-text);
     border-radius: 20px;
-    color: white;
+    color: var(--header-text);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -130,8 +155,10 @@ body {
 }
 
 .review-text {
-    font-weight: 500;
-    font-size: 0.85rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    /* Prevent wrapping */
 }
 
 /* Hide review text on mobile */
@@ -833,12 +860,14 @@ i.bx {
 }
 
 .opening-hours {
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--header-text);
     margin-right: 15px;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
+    white-space: nowrap;
 }
 
 @media (max-width: 768px) {

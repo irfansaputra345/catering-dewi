@@ -33,7 +33,7 @@ const menuData = [
         id: 1,
         name: "Nasi Box Ayam Bakar",
         price: 18000,
-        img: "images/image 6.webp",
+        img: "images/nasi-box-ayam-bakar.webp",
         rating: 4.8,
         desc: "Nasi putih pulen, ayam bakar bumbu rujak, lalapan segar, dan sambal terasi.",
     },
@@ -41,7 +41,7 @@ const menuData = [
         id: 2,
         name: "Mangut Ikan",
         price: 30000,
-        img: "images/image 4.webp",
+        img: "images/mangut-ikan.webp",
         rating: 4.5,
         desc: "Bisa request untuk ikanyab , ada Nila, Lele, Gurame, Dan Lain-Lain.",
     },
@@ -49,7 +49,7 @@ const menuData = [
         id: 3,
         name: "Rica-Rica",
         price: 300000,
-        img: "images/image 8.webp",
+        img: "images/rica-rica.webp",
         rating: 5.0,
         desc: "Rica - Rica bisa request daging ayam, daging entok, Harga bisa menyesuaikan dan bisa request sesuai budget.",
     },
@@ -57,7 +57,7 @@ const menuData = [
         id: 4,
         name: "Catering Harian",
         price: 35000,
-        img: "images/image 10.webp",
+        img: "images/catering-harian.webp",
         rating: 4.7,
         desc: "Menu makan siang berganti setiap hari, termasuk nasi, lauk utama, sayur, dan buah.",
     },
@@ -260,6 +260,16 @@ function closeSidebar() {
 updateCart();
 updateCardControls(); // Sync badges on load
 
+/* HEADER SCROLL EFFECT */
+const header = document.querySelector(".header");
+window.addEventListener("scroll", () => {
+    if (window.scrollY > 50) {
+        header.classList.add("header-scrolled");
+    } else {
+        header.classList.remove("header-scrolled");
+    }
+});
+
 /* DARK MODE TOGGLE */
 const toggleBtn = document.getElementById("themeToggle");
 const savedTheme = localStorage.getItem("theme");
@@ -425,13 +435,13 @@ window.openReviewForm = async (e) => {
         title:
             '<div style="color: #2e7d32; font-size: 1.8rem; margin-bottom: 10px; font-weight: 700;">✍️ Tulis Ulasan Anda</div>',
         html: `
-                <div style="text-align: left; padding: 20px; background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); border-radius: 15px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);">
+                <div style="text-align: left; padding: 15px; background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); border-radius: 15px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);">
                     <div style="margin-bottom: 20px;">
                         <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1b5e20; font-size: 0.95rem;">
                             <i class='bx bx-user' style="margin-right: 5px; color: #2e7d32;"></i>Nama Anda
                         </label>
                         <input id="swal-input1" class="swal2-input" placeholder="Masukkan nama Anda" 
-                            style="margin: 0; width: 95%; border: 2px solid #66bb6a; border-radius: 10px; padding: 12px; font-size: 0.95rem; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                            style="margin: 0; width: 100%; border: 2px solid #66bb6a; border-radius: 10px; padding: 12px; font-size: 0.95rem; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); box-sizing: border-box;">
                     </div>
                     
                     <div style="margin-bottom: 20px;">
@@ -439,7 +449,7 @@ window.openReviewForm = async (e) => {
                             <i class='bx bx-star' style="margin-right: 5px; color: #ff9800;"></i>Rating Makanan
                         </label>
                         <select id="swal-input2" class="swal2-input" 
-                            style="margin: 0; width: calc(100% - 4px); padding: 12px 15px; border: 2px solid #66bb6a; border-radius: 10px; font-size: 0.95rem; background: white; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); appearance: auto;">
+                            style="margin: 0; width: 100%; padding: 10px 15px; height: auto; border: 2px solid #66bb6a; border-radius: 10px; font-size: 0.95rem; background: white; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); appearance: auto; box-sizing: border-box;">
                             <option value="" style="color: #999;">-- Pilih Rating Anda --</option>
                             <option value="5">⭐⭐⭐⭐⭐ Sangat Puas</option>
                             <option value="4">⭐⭐⭐⭐ Puas</option>
@@ -455,7 +465,7 @@ window.openReviewForm = async (e) => {
                         </label>
                         <textarea id="swal-input3" class="swal2-textarea" 
                             placeholder="Ceritakan pengalaman Anda dengan makanan kami..." 
-                            style="margin: 0; width: 95%; height: 130px; resize: vertical; border: 2px solid #66bb6a; border-radius: 10px; padding: 12px; font-size: 0.95rem; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-family: 'Poppins', sans-serif;"></textarea>
+                            style="margin: 0; width: 100%; height: 130px; resize: vertical; border: 2px solid #66bb6a; border-radius: 10px; padding: 12px; font-size: 0.95rem; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-family: 'Poppins', sans-serif; box-sizing: border-box;"></textarea>
                     </div>
                 </div>
             `,

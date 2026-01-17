@@ -28,6 +28,31 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+// Helper to compress image to Base64
+async function compressImage(file) {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement("canvas");
+                const MAX_WIDTH = 600;
+                const scaleSize = MAX_WIDTH / img.width;
+                canvas.width = MAX_WIDTH;
+                canvas.height = img.height * scaleSize;
+
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                // Compress to JPEG with 0.6 quality
+                resolve(canvas.toDataURL("image/jpeg", 0.6));
+            };
+        };
+    });
+}
+
 const menuData = [
     {
         id: 1,
@@ -416,10 +441,21 @@ window.openTestimonialsModal = (e) => {
 
     testContainer.innerHTML = "";
     testimonialsData.forEach((t) => {
+        const photoHtml = t.photoUrl
+            ? `<div style="margin-top: 15px; border-radius: 8px; overflow: hidden; max-height: 250px;">
+                   <img src="${t.photoUrl}" style="width: 100%; height: auto; object-fit: cover; cursor: pointer;" onclick="window.open(this.src, '_blank')">
+               </div>`
+            : "";
+
         testContainer.innerHTML += `
-                <div class="testimonial-card" style="background: #f9f9f9; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-                    <p style="font-style: italic; color: #555;">"${t.text}"</p>
-                    <h5 style="margin-top: 10px; color: var(--text-color); font-weight: 600;">- ${t.name} ${t.rating}</h5>
+                <div class="testimonial-card" style="background: white; padding: 18px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-align: left; border: 1px solid #eee;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                        <span style="color: #ff9800; font-weight: bold; font-size: 1.1rem;">${t.rating}</span>
+                        <small style="color: #999;">${t.timestamp ? new Date(t.timestamp).toLocaleDateString() : ""}</small>
+                    </div>
+                    <p style="font-style: italic; color: #444; line-height: 1.5; margin-bottom: 5px;">"${t.text}"</p>
+                    <h5 style="margin-top: 5px; color: var(--primary); font-weight: 600;">- ${t.name}</h5>
+                    ${photoHtml}
                 </div>
             `;
     });
@@ -467,6 +503,13 @@ window.openReviewForm = async (e) => {
                             placeholder="Ceritakan pengalaman Anda dengan makanan kami..." 
                             style="margin: 0; width: 100%; height: 130px; resize: vertical; border: 2px solid #66bb6a; border-radius: 10px; padding: 12px; font-size: 0.95rem; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-family: 'Poppins', sans-serif; box-sizing: border-box;"></textarea>
                     </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1b5e20; font-size: 0.95rem;">
+                            <i class='bx bx-camera' style="margin-right: 5px; color: #2e7d32;"></i>Foto (Opsional)
+                        </label>
+                        <input type="file" id="swal-input-file" accept="image/*"
+                            style="margin: 0; width: 100%; border: 2px dashed #66bb6a; border-radius: 10px; padding: 10px; font-size: 0.9rem; background: white; cursor: pointer; box-sizing: border-box;">
+                    </div>
                 </div>
             `,
         width: "650px",
@@ -485,16 +528,17 @@ window.openReviewForm = async (e) => {
             cancelButton: "review-cancel-btn",
         },
         preConfirm: () => {
-            return [
-                document.getElementById("swal-input1").value,
-                document.getElementById("swal-input2").value,
-                document.getElementById("swal-input3").value,
-            ];
+            return {
+                name: document.getElementById("swal-input1").value,
+                rating: document.getElementById("swal-input2").value,
+                review: document.getElementById("swal-input3").value,
+                file: document.getElementById("swal-input-file").files[0],
+            };
         },
     });
 
     if (formValues) {
-        const [name, rating, review] = formValues;
+        const { name, rating, review, file } = formValues;
         if (!name || !rating || !review) {
             return Swal.fire({
                 title: "⚠️ Data Belum Lengkap",
@@ -506,11 +550,31 @@ window.openReviewForm = async (e) => {
         }
 
         // Push to Firebase
-        const stars = "⭐".repeat(rating);
+        Swal.fire({
+            title: "⏳ Sedang Mengirim...",
+            html: "Mohon tunggu sebentar, ulasan Anda sedang kami proses.",
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+        });
+
+        let photoUrl = "";
+        if (file) {
+            try {
+                photoUrl = await compressImage(file);
+            } catch (error) {
+                console.error("Compression Error:", error);
+                return Swal.fire("Error", "Gagal memproses foto.", "error");
+            }
+        }
+
+        const stars = "⭐".repeat(parseInt(rating));
         const newReview = {
             text: review,
             name: name,
             rating: stars,
+            photoUrl: photoUrl,
             timestamp: Date.now(),
         };
 

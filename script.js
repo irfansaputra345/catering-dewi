@@ -1,17 +1,58 @@
 document.addEventListener("DOMContentLoaded", () => {
-
     const CONFIG = {
         whatsapp: "6285927326555",
         minOrder: 100000,
         openHour: 9,
-        closeHour: 20
+        closeHour: 20,
     };
 
+    // Firebase Configuration - SILAKAN GANTI DENGAN CONFIG ANDA
+    const firebaseConfig = {
+        apiKey: "AIzaSyBD12ZSkKXT6-1282jbqWOUpmGty86oIXE",
+        authDomain: "catring-irfan.firebaseapp.com",
+        projectId: "catring-irfan",
+        storageBucket: "catring-irfan.firebasestorage.app",
+        messagingSenderId: "601199637263",
+        appId: "1:601199637263:web:901fefbe87be1b57f0447a",
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
     const menuData = [
-        { id: 1, name: "Nasi Box Ayam Bakar", price: 18000, img: "images/IMG-20260117-WA0002.webp", rating: 4.8, desc: "Nasi putih pulen, ayam bakar bumbu rujak, lalapan segar, dan sambal terasi." },
-        { id: 2, name: "Mangut Ikan", price: 30000, img: "images/IMG-20260117-WA0007.webp", rating: 4.5, desc: "Bisa request untuk ikanyab , ada Nila, Lele, Gurame, Dan Lain-Lain." },
-        { id: 3, name: "Rica-Rica", price: 300000, img: "images/IMG-20260117-WA0004.webp", rating: 5.0, desc: "Rica - Rica bisa request daging ayam, daging entok, Harga bisa menyesuaikan dan bisa request sesuai budget." },
-        { id: 4, name: "Catering Harian", price: 35000, img: "images/IMG-20260117-WA0003.webp", rating: 4.7, desc: "Menu makan siang berganti setiap hari, termasuk nasi, lauk utama, sayur, dan buah." }
+        {
+            id: 1,
+            name: "Nasi Box Ayam Bakar",
+            price: 18000,
+            img: "images/Nasi BOx.jpeg",
+            rating: 4.8,
+            desc: "Nasi putih pulen, ayam bakar bumbu rujak, lalapan segar, dan sambal terasi.",
+        },
+        {
+            id: 2,
+            name: "Mangut Ikan",
+            price: 30000,
+            img: "images/Mangut Nila.jpeg",
+            rating: 4.5,
+            desc: "Bisa request untuk ikanyab , ada Nila, Lele, Gurame, Dan Lain-Lain.",
+        },
+        {
+            id: 3,
+            name: "Rica-Rica",
+            price: 300000,
+            img: "images/Rica-Rica.jpeg",
+            rating: 5.0,
+            desc: "Rica - Rica bisa request daging ayam, daging entok, Harga bisa menyesuaikan dan bisa request sesuai budget.",
+        },
+        {
+            id: 4,
+            name: "Catering Harian",
+            price: 35000,
+            img: "images/Nasi BOx.jpeg",
+            rating: 4.7,
+            desc: "Menu makan siang berganti setiap hari, termasuk nasi, lauk utama, sayur, dan buah.",
+        },
     ];
 
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -24,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* RENDER MENU */
     if (menuList) {
-        menuData.forEach(item => {
+        menuData.forEach((item) => {
             menuList.innerHTML += `
                 <div class="card" id="card-${item.id}">
                     <div class="card-img-wrapper">
@@ -56,31 +97,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Helper to update card badges based on cart state
     function updateCardControls() {
-        menuData.forEach(item => {
+        menuData.forEach((item) => {
             const actions = document.getElementById(`actions-${item.id}`);
             if (actions) {
-                const addBtn = actions.querySelector('.add-to-cart-btn');
-                const controls = actions.querySelector('.card-qty-controls');
-                const qtyVal = actions.querySelector('.card-qty-val');
+                const addBtn = actions.querySelector(".add-to-cart-btn");
+                const controls = actions.querySelector(".card-qty-controls");
+                const qtyVal = actions.querySelector(".card-qty-val");
 
-                const cartItem = cart.find(c => c.id === item.id);
+                const cartItem = cart.find((c) => c.id === item.id);
 
                 if (cartItem && cartItem.qty > 0) {
-                    addBtn.style.display = 'none';
-                    controls.style.display = 'flex';
+                    addBtn.style.display = "none";
+                    controls.style.display = "flex";
                     qtyVal.innerText = cartItem.qty;
                 } else {
-                    addBtn.style.display = 'block';
-                    controls.style.display = 'none';
-                    qtyVal.innerText = '0';
+                    addBtn.style.display = "block";
+                    controls.style.display = "none";
+                    qtyVal.innerText = "0";
                 }
             }
         });
     }
 
     window.addToCart = (id) => {
-        const item = menuData.find(m => m.id === id);
-        const exist = cart.find(c => c.id === id);
+        const item = menuData.find((m) => m.id === id);
+        const exist = cart.find((c) => c.id === id);
         exist ? exist.qty++ : cart.push({ ...item, qty: 1 });
         save();
         updateCart();
@@ -90,15 +131,16 @@ document.addEventListener("DOMContentLoaded", () => {
             text: `${item.name}`,
             icon: "success",
             timer: 800,
-            showConfirmButton: false
+            showConfirmButton: false,
         });
     };
 
     function updateCart() {
         cartItems.innerHTML = "";
-        let total = 0, count = 0;
+        let total = 0,
+            count = 0;
 
-        cart.forEach(item => {
+        cart.forEach((item) => {
             total += item.price * item.qty;
             count += item.qty;
             cartItems.innerHTML += `
@@ -121,7 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     window.updateQty = (id, change) => {
-        const item = cart.find(i => i.id === id);
+        const item = cart.find((i) => i.id === id);
         if (item) {
             item.qty += change;
             if (item.qty < 1) {
@@ -135,7 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     window.removeFromCart = (id) => {
-        cart = cart.filter(item => item.id !== id);
+        cart = cart.filter((item) => item.id !== id);
         save();
         updateCart();
         updateCardControls();
@@ -155,22 +197,29 @@ document.addEventListener("DOMContentLoaded", () => {
         const { openHour, closeHour } = CONFIG;
         if (hour < openHour || hour >= closeHour) {
             return Swal.fire({
-                icon: 'error',
-                title: 'Maaf, Kami Tutup',
-                text: `Kami melayani pemesanan dari jam ${openHour < 10 ? '0' + openHour : openHour}:00 sampai ${closeHour}:00.`
+                icon: "error",
+                title: "Maaf, Kami Tutup",
+                text: `Kami melayani pemesanan dari jam ${openHour < 10 ? "0" + openHour : openHour}:00 sampai ${closeHour}:00.`,
             });
         }
 
         let total = cart.reduce((s, i) => s + i.price * i.qty, 0);
         if (total < CONFIG.minOrder) {
-            return Swal.fire("Minimal Order", `Rp ${CONFIG.minOrder.toLocaleString()}`, "info");
+            return Swal.fire(
+                "Minimal Order",
+                `Rp ${CONFIG.minOrder.toLocaleString()}`,
+                "info",
+            );
         }
 
         let msg = "*PESANAN CATERING DEWI IRFAN*\n\n";
-        cart.forEach((i, n) => msg += `${n + 1}. ${i.name} (${i.qty}x)\n`);
+        cart.forEach((i, n) => (msg += `${n + 1}. ${i.name} (${i.qty}x)\n`));
         msg += `\nTotal: Rp ${total.toLocaleString()}`;
 
-        window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`, "_blank");
+        window.open(
+            `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`,
+            "_blank",
+        );
         cart = [];
         save();
         updateCart();
@@ -201,7 +250,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Helper to set icon
     const setIcon = (isDark) => {
-        if (toggleBtn) toggleBtn.innerHTML = isDark ? "<i class='bx bx-sun'></i>" : "<i class='bx bx-moon'></i>";
+        if (toggleBtn)
+            toggleBtn.innerHTML = isDark
+                ? "<i class='bx bx-sun'></i>"
+                : "<i class='bx bx-moon'></i>";
     };
 
     // Set initial state
@@ -235,7 +287,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         </div>
     </div>`;
-    document.body.insertAdjacentHTML('beforeend', modalMarkup);
+    document.body.insertAdjacentHTML("beforeend", modalMarkup);
 
     const modal = document.getElementById("menuModal");
     const modalImg = document.getElementById("modalImg");
@@ -246,12 +298,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalAddBtn = document.getElementById("modalAddBtn");
 
     if (menuList) {
-        menuList.addEventListener("click", e => {
+        menuList.addEventListener("click", (e) => {
             // Check if clicked element is NOT a button (Add to Cart)
             if (e.target.tagName !== "BUTTON" && e.target.closest(".card")) {
                 const card = e.target.closest(".card");
                 const title = card.querySelector("h3").innerText;
-                const item = menuData.find(m => m.name === title);
+                const item = menuData.find((m) => m.name === title);
                 if (item) openModal(item);
             }
         });
@@ -276,16 +328,59 @@ document.addEventListener("DOMContentLoaded", () => {
         modal.classList.remove("active");
     };
 
-    modal.addEventListener("click", e => {
+    modal.addEventListener("click", (e) => {
         if (e.target === modal) closeModal();
     });
 
-    /* TESTIMONIALS MODAL LOGIC */
-    const testimonialsData = [
-        { text: "Makanannya enak banget, bumbunya meresap sampai ke tulang! Recommended buat acara kantor.", name: "Budi Santoso", rating: "⭐⭐⭐⭐⭐" },
-        { text: "Pesan tumpeng mini buat ultah anak, hiasannya cantik dan rasanya juara.", name: "Siti Aminah", rating: "⭐⭐⭐⭐⭐" },
-        { text: "Pelayanan ramah dan pengiriman selalu tepat waktu. Langganan catering harian di sini.", name: "Rina Marlina", rating: "⭐⭐⭐⭐½" }
+    /* TESTIMONIALS LOGIC WITH FIREBASE */
+    let testimonialsData = [
+        {
+            text: "Makanannya enak banget, bumbunya meresap sampai ke tulang! Recommended buat acara kantor.",
+            name: "Budi Santoso",
+            rating: "⭐⭐⭐⭐⭐",
+        },
+        {
+            text: "Pesan tumpeng mini buat ultah anak, hiasannya cantik dan rasanya juara.",
+            name: "Siti Aminah",
+            rating: "⭐⭐⭐⭐⭐",
+        },
+        {
+            text: "Pelayanan ramah dan pengiriman selalu tepat waktu. Langganan catering harian di sini.",
+            name: "Rina Marlina",
+            rating: "⭐⭐⭐⭐½",
+        },
     ];
+
+    // Fetch Reviews from Firebase
+    function fetchReviews() {
+        db.ref("reviews").on("value", (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                const firebaseReviews = Object.values(data).reverse();
+                testimonialsData = [
+                    ...firebaseReviews,
+                    ...[
+                        {
+                            text: "Makanannya enak banget, bumbunya meresap sampai ke tulang! Recommended buat acara kantor.",
+                            name: "Budi Santoso",
+                            rating: "⭐⭐⭐⭐⭐",
+                        },
+                        {
+                            text: "Pesan tumpeng mini buat ultah anak, hiasannya cantik dan rasanya juara.",
+                            name: "Siti Aminah",
+                            rating: "⭐⭐⭐⭐⭐",
+                        },
+                        {
+                            text: "Pelayanan ramah dan pengiriman selalu tepat waktu. Langganan catering harian di sini.",
+                            name: "Rina Marlina",
+                            rating: "⭐⭐⭐⭐½",
+                        },
+                    ],
+                ];
+            }
+        });
+    }
+    fetchReviews();
 
     const testModalMarkup = `
     <div class="modal-overlay" id="testModal">
@@ -299,7 +394,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         </div>
     </div>`;
-    document.body.insertAdjacentHTML('beforeend', testModalMarkup);
+    document.body.insertAdjacentHTML("beforeend", testModalMarkup);
 
     const testModal = document.getElementById("testModal");
     const testContainer = document.getElementById("testModalContainer");
@@ -309,7 +404,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e) e.preventDefault();
 
         testContainer.innerHTML = "";
-        testimonialsData.forEach(t => {
+        testimonialsData.forEach((t) => {
             testContainer.innerHTML += `
                 <div class="testimonial-card" style="background: #f9f9f9; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
                     <p style="font-style: italic; color: #555;">"${t.text}"</p>
@@ -326,23 +421,24 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e) e.preventDefault();
 
         const { value: formValues } = await Swal.fire({
-            title: '<div style="color: #2e7d32; font-size: 1.8rem; margin-bottom: 10px; font-weight: 700;">✍️ Tulis Ulasan Anda</div>',
+            title:
+                '<div style="color: #2e7d32; font-size: 1.8rem; margin-bottom: 10px; font-weight: 700;">✍️ Tulis Ulasan Anda</div>',
             html: `
-                <div style="text-align: left; padding: 25px; background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); border-radius: 15px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);">
-                    <div style="margin-bottom: 25px;">
-                        <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #1b5e20; font-size: 1rem;">
-                            <i class='bx bx-user' style="margin-right: 8px; color: #2e7d32; font-size: 1.1rem;"></i>Nama Anda
+                <div style="text-align: left; padding: 20px; background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); border-radius: 15px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);">
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1b5e20; font-size: 0.95rem;">
+                            <i class='bx bx-user' style="margin-right: 5px; color: #2e7d32;"></i>Nama Anda
                         </label>
                         <input id="swal-input1" class="swal2-input" placeholder="Masukkan nama Anda" 
-                            style="margin: 0; width: 100%; border: 2px solid #66bb6a; border-radius: 10px; padding: 14px 16px; font-size: 1rem; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); box-sizing: border-box; transition: all 0.3s ease;">
+                            style="margin: 0; width: 95%; border: 2px solid #66bb6a; border-radius: 10px; padding: 12px; font-size: 0.95rem; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
                     </div>
                     
-                    <div style="margin-bottom: 25px;">
-                        <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #1b5e20; font-size: 1rem;">
-                            <i class='bx bx-star' style="margin-right: 8px; color: #ff9800; font-size: 1.1rem;"></i>Rating Makanan
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1b5e20; font-size: 0.95rem;">
+                            <i class='bx bx-star' style="margin-right: 5px; color: #ff9800;"></i>Rating Makanan
                         </label>
                         <select id="swal-input2" class="swal2-input" 
-                            style="margin: 0; width: 100%; padding: 14px 12px; border: 2px solid #66bb6a; border-radius: 10px; font-size: 1rem; background: white; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); box-sizing: border-box; transition: all 0.3s ease; min-height: 48px; overflow: visible; text-overflow: clip;">
+                            style="margin: 0; width: calc(100% - 4px); padding: 12px 15px; border: 2px solid #66bb6a; border-radius: 10px; font-size: 0.95rem; background: white; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); appearance: auto;">
                             <option value="" style="color: #999;">-- Pilih Rating Anda --</option>
                             <option value="5">⭐⭐⭐⭐⭐ Sangat Puas</option>
                             <option value="4">⭐⭐⭐⭐ Puas</option>
@@ -352,38 +448,38 @@ document.addEventListener("DOMContentLoaded", () => {
                         </select>
                     </div>
                     
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #1b5e20; font-size: 1rem;">
-                            <i class='bx bx-message-square-detail' style="margin-right: 8px; color: #2e7d32; font-size: 1.1rem;"></i>Ulasan Anda
+                    <div style="margin-bottom: 10px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1b5e20; font-size: 0.95rem;">
+                            <i class='bx bx-message-square-detail' style="margin-right: 5px; color: #2e7d32;"></i>Ulasan Anda
                         </label>
                         <textarea id="swal-input3" class="swal2-textarea" 
                             placeholder="Ceritakan pengalaman Anda dengan makanan kami..." 
-                            style="margin: 0; width: 100%; height: 160px; resize: vertical; border: 2px solid #66bb6a; border-radius: 10px; padding: 14px 16px; font-size: 1rem; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-family: 'Poppins', sans-serif; box-sizing: border-box; word-wrap: break-word; overflow-wrap: break-word; line-height: 1.6; transition: all 0.3s ease;"></textarea>
+                            style="margin: 0; width: 95%; height: 130px; resize: vertical; border: 2px solid #66bb6a; border-radius: 10px; padding: 12px; font-size: 0.95rem; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-family: 'Poppins', sans-serif;"></textarea>
                     </div>
                 </div>
             `,
-            width: '650px',
-            padding: '2.5em',
-            background: '#fff',
+            width: "650px",
+            padding: "2.5em",
+            background: "#fff",
             focusConfirm: false,
             showCancelButton: true,
-            confirmButtonText: '📤 Kirim Ulasan',
-            cancelButtonText: '✕ Batal',
-            confirmButtonColor: '#2e7d32',
-            cancelButtonColor: '#999',
+            confirmButtonText: "📤 Kirim",
+            cancelButtonText: "✕ Batal",
+            confirmButtonColor: "#2e7d32",
+            cancelButtonColor: "#999",
             buttonsStyling: true,
             customClass: {
-                popup: 'review-popup-custom',
-                confirmButton: 'review-confirm-btn',
-                cancelButton: 'review-cancel-btn'
+                popup: "review-popup-custom",
+                confirmButton: "review-confirm-btn",
+                cancelButton: "review-cancel-btn",
             },
             preConfirm: () => {
                 return [
-                    document.getElementById('swal-input1').value,
-                    document.getElementById('swal-input2').value,
-                    document.getElementById('swal-input3').value
-                ]
-            }
+                    document.getElementById("swal-input1").value,
+                    document.getElementById("swal-input2").value,
+                    document.getElementById("swal-input3").value,
+                ];
+            },
         });
 
         if (formValues) {
@@ -393,27 +489,36 @@ document.addEventListener("DOMContentLoaded", () => {
                     title: "⚠️ Data Belum Lengkap",
                     html: '<p style="font-size: 1rem; color: #666;">Harap isi semua kolom (Nama, Rating, dan Ulasan)</p>',
                     icon: "warning",
-                    confirmButtonColor: '#2e7d32',
-                    confirmButtonText: 'OK, Mengerti'
+                    confirmButtonColor: "#2e7d32",
+                    confirmButtonText: "OK, Mengerti",
                 });
             }
 
-            // Add to testimonials array
+            // Push to Firebase
             const stars = "⭐".repeat(rating);
-            testimonialsData.push({
+            const newReview = {
                 text: review,
                 name: name,
-                rating: stars
-            });
+                rating: stars,
+                timestamp: Date.now(),
+            };
 
-            Swal.fire({
-                title: "🙏 Terima Kasih!",
-                html: `<p style="font-size: 1.1rem; color: #555; line-height: 1.6;">Ulasan Anda telah berhasil dikirim!<br>Terima kasih atas feedback Anda 💚</p>`,
-                icon: "success",
-                timer: 2500,
-                showConfirmButton: false,
-                timerProgressBar: true
-            });
+            db.ref("reviews")
+                .push(newReview)
+                .then(() => {
+                    Swal.fire({
+                        title: "🙏 Terima Kasih!",
+                        html: `<p style="font-size: 1.1rem; color: #555; line-height: 1.6;">Ulasan Anda telah berhasil disimpan!<br>Terima kasih atas feedback Anda 💚</p>`,
+                        icon: "success",
+                        timer: 2500,
+                        showConfirmButton: false,
+                        timerProgressBar: true,
+                    });
+                })
+                .catch((error) => {
+                    console.error("Firebase Error:", error);
+                    Swal.fire("Error", "Gagal menyimpan ulasan ke database.", "error");
+                });
         }
     };
 
@@ -421,7 +526,7 @@ document.addEventListener("DOMContentLoaded", () => {
         testModal.classList.remove("active");
     };
 
-    testModal.addEventListener("click", e => {
+    testModal.addEventListener("click", (e) => {
         if (e.target === testModal) closeTestModal();
     });
 });

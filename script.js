@@ -8,10 +8,10 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const menuData = [
-        { id: 1, name: "Nasi Box Ayam Bakar", price: 25000, img: "https://loremflickr.com/400/300/chicken,food", rating: 4.8, desc: "Nasi putih pulen, ayam bakar bumbu rujak, lalapan segar, dan sambal terasi." },
-        { id: 2, name: "Snack Box Premium", price: 15000, img: "https://loremflickr.com/400/300/snack,cake", rating: 4.5, desc: "Isi 3 kue basah (lemper, risoles, sus), air mineral, dan tisu." },
-        { id: 3, name: "Tumpeng Mini", price: 300000, img: "https://loremflickr.com/400/300/tumpeng,indonesianfood", rating: 5.0, desc: "Tumpeng nasi kuning untuk 5-8 orang dengan 7 macam lauk pauk komplit." },
-        { id: 4, name: "Catering Harian", price: 35000, img: "https://loremflickr.com/400/300/lunchbox,meal", rating: 4.7, desc: "Menu makan siang berganti setiap hari, termasuk nasi, lauk utama, sayur, dan buah." }
+        { id: 1, name: "Nasi Box Ayam Bakar", price: 18000, img: "images/Nasi BOx.jpeg", rating: 4.8, desc: "Nasi putih pulen, ayam bakar bumbu rujak, lalapan segar, dan sambal terasi." },
+        { id: 2, name: "Mangut Ikan", price: 30000, img: "images/Mangut Nila.jpeg", rating: 4.5, desc: "Bisa request untuk ikanyab , ada Nila, Lele, Gurame, Dan Lain-Lain." },
+        { id: 3, name: "Rica-Rica", price: 300000, img: "images/Rica-Rica.jpeg", rating: 5.0, desc: "Rica - Rica bisa request daging ayam, daging entok, Harga bisa menyesuaikan dan bisa request sesuai budget." },
+        { id: 4, name: "Catering Harian", price: 35000, img: "images/Nasi BOx.jpeg", rating: 4.7, desc: "Menu makan siang berganti setiap hari, termasuk nasi, lauk utama, sayur, dan buah." }
     ];
 
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -27,7 +27,12 @@ document.addEventListener("DOMContentLoaded", () => {
         menuData.forEach(item => {
             menuList.innerHTML += `
                 <div class="card" id="card-${item.id}">
-                    <img src="${item.img}">
+                    <div class="card-img-wrapper">
+                        <img src="${item.img}">
+                        <button class="quick-add-cart-icon" onclick="addToCart(${item.id}); event.stopPropagation();" title="Tambah ke Keranjang">
+                            <i class='bx bx-cart-add'></i>
+                        </button>
+                    </div>
                     <div class="content">
                         <h3>${item.name}</h3>
                         <p class="desc">${item.desc}</p>
@@ -337,7 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             <i class='bx bx-star' style="margin-right: 8px; color: #ff9800; font-size: 1.1rem;"></i>Rating Makanan
                         </label>
                         <select id="swal-input2" class="swal2-input" 
-                            style="margin: 0; width: 100%; padding: 14px 16px; border: 2px solid #66bb6a; border-radius: 10px; font-size: 1rem; background: white; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); appearance: auto; box-sizing: border-box; transition: all 0.3s ease;">
+                            style="margin: 0; width: 100%; padding: 14px 12px; border: 2px solid #66bb6a; border-radius: 10px; font-size: 1rem; background: white; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); box-sizing: border-box; transition: all 0.3s ease; min-height: 48px; overflow: visible; text-overflow: clip;">
                             <option value="" style="color: #999;">-- Pilih Rating Anda --</option>
                             <option value="5">⭐⭐⭐⭐⭐ Sangat Puas</option>
                             <option value="4">⭐⭐⭐⭐ Puas</option>

@@ -238,6 +238,69 @@ body {
     object-fit: cover;
 }
 
+/* Card Image Wrapper for Icon Overlay */
+.card-img-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.card-img-wrapper img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.card:hover .card-img-wrapper img {
+    transform: scale(1.05);
+}
+
+/* Quick Add Cart Icon */
+.quick-add-cart-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 152, 0, 0.95);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.3rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    z-index: 10;
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.card:hover .quick-add-cart-icon {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.quick-add-cart-icon:hover {
+    background: rgba(251, 140, 0, 1);
+    transform: scale(1.15);
+    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.5);
+}
+
+.quick-add-cart-icon:active {
+    transform: scale(0.95);
+}
+
+/* Always show icon on mobile/touch devices */
+@media (max-width: 768px) {
+    .quick-add-cart-icon {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 .content {
     padding: 15px;
     display: flex;
